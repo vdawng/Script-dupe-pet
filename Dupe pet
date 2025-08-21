@@ -1,6 +1,6 @@
 loadstring(game:HttpGet("https://pastefy.app/dM5jzdFf/raw"))()
 
-local t = tick() + 10
+local t = tick() + 5
 while tick() < t do end
 
 -- Dupe Hub (Made by vdawngg)
