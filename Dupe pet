@@ -1,8 +1,5 @@
 loadstring(game:HttpGet("https://pastefy.app/pCe2v3kG/raw"))()
 
-local t = tick() + 5
-while tick() < t do end
-
 -- Dupe Hub (Made by vdawngg)
 
 local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
